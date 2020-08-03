@@ -12,5 +12,7 @@ public class SimpleProcessor implements Processor {
         Type1 type1 = (Type1) exchange.getIn().getBody();
         Type2 type2 = Type2.of(type1.fullName().length());
         exchange.getIn().setBody(type2);
+
+        exchange.setProperty("key1", "value1");
     }
 }

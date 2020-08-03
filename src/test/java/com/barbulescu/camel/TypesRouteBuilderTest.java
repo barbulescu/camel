@@ -7,7 +7,6 @@ import org.apache.camel.Message;
 import org.apache.camel.Route;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.CamelSpringTestSupport;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -18,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @CamelSpringBootTest
@@ -34,14 +34,25 @@ class TypesRouteBuilderTest extends CamelSpringTestSupport {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("typesRouteData")
-    void typesRoute(String routeId) {
+    void typesRouteBody(String routeId) {
         Route route = context.getRoute(routeId);
         fluentTemplate.setDefaultEndpoint(route.getEndpoint());
         Exchange abc = fluentTemplate.withBody(Type1.of("abc")).send();
-        Assertions.assertThat(abc)
+        assertThat(abc)
                 .extracting(Exchange::getIn)
                 .extracting(Message::getBody)
                 .isEqualTo(Type2.of(3));
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("typesRouteData")
+    void typesRouteProperties(String routeId) {
+        Route route = context.getRoute(routeId);
+        fluentTemplate.setDefaultEndpoint(route.getEndpoint());
+        Exchange abc = fluentTemplate.withBody(Type1.of("abc")).send();
+        assertThat(abc)
+                .extracting(it -> it.getProperty("key1"))
+                .isEqualTo("value1");
     }
 
     @Override
