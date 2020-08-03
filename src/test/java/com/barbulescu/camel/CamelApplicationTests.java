@@ -1,8 +1,5 @@
 package com.barbulescu.camel;
 
-import org.apache.camel.EndpointInject;
-import org.apache.camel.Produce;
-import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.CamelSpringTestSupport;
@@ -23,16 +20,17 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @MockEndpoints
 class CamelApplicationTests extends CamelSpringTestSupport {
 
-    @Produce("mock://file:///tmp/camel_source")
-    private ProducerTemplate template;
-
-    @EndpointInject("mock://file:///tmp/camel_source")
-    private MockEndpoint source;
-    @EndpointInject("mock://file:///tmp/camel_destination")
-    private MockEndpoint destination;
+    @Override
+    public String isMockEndpoints() {
+        return "*";
+    }
 
     @Test
     public void testReceive() throws Exception {
+        MockEndpoint source = findMock("source");
+        MockEndpoint destination = findMock("destination");
+        template.setDefaultEndpoint(source);
+
         assertThat(template).isNotNull();
         source.expectedBodiesReceived("Hallo");
         destination.expectedBodiesReceived("Hallo");
@@ -41,6 +39,13 @@ class CamelApplicationTests extends CamelSpringTestSupport {
 
         MockEndpoint.assertIsSatisfied(5, SECONDS);
         MockEndpoint.assertIsSatisfied(5, SECONDS);
+    }
+
+    private MockEndpoint findMock(String suffix) {
+        return (MockEndpoint) context.getEndpoints().stream()
+                .filter(it -> it.getEndpointUri().endsWith(suffix))
+                .findAny()
+                .orElseThrow();
     }
 
     @Override
