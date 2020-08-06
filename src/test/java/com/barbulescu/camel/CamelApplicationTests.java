@@ -1,5 +1,6 @@
 package com.barbulescu.camel;
 
+import org.apache.camel.RoutesBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.CamelSpringTestSupport;
@@ -46,6 +47,11 @@ class CamelApplicationTests extends CamelSpringTestSupport {
                 .filter(it -> it.getEndpointUri().endsWith(suffix))
                 .findAny()
                 .orElseThrow();
+    }
+
+    @Override
+    protected RoutesBuilder createRouteBuilder() {
+        return new FolderCopyRouteBuilder();
     }
 
     @Override

@@ -11,6 +11,6 @@ public class BeanTypesRouteBuilder extends EndpointRouteBuilder {
     public void configure() {
         from(direct("bean"))
                 .routeId("bean")
-                .bean(SimpleBean.class);
+                .bean(new SimpleBean("some value"));
     }
 }

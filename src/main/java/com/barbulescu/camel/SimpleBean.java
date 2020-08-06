@@ -10,9 +10,15 @@ import java.util.Map;
 
 public class SimpleBean {
 
+    private final String specialValue;
+
+    public SimpleBean(String specialValue) {
+        this.specialValue = specialValue;
+    }
+
     @Handler
     public Type2 convertTypes(@Body Type1 type1, @ExchangeProperties Map<String, String> properties) {
-        properties.putIfAbsent("key1", "value1");
+        properties.putIfAbsent("key1", specialValue);
         return Type2.of(type1.fullName().length());
     }
 }

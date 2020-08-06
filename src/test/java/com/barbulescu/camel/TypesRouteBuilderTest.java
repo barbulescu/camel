@@ -52,7 +52,7 @@ class TypesRouteBuilderTest extends CamelSpringTestSupport {
         Exchange abc = fluentTemplate.withBody(Type1.of("abc")).send();
         assertThat(abc)
                 .extracting(it -> it.getProperty("key1"))
-                .isEqualTo("value1");
+                .isEqualTo("some value");
     }
 
     @Override
