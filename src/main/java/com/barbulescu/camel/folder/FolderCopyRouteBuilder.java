@@ -1,9 +1,11 @@
-package com.barbulescu.camel;
+package com.barbulescu.camel.folder;
 
 import org.apache.camel.builder.endpoint.EndpointRouteBuilder;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
+@Profile("folder")
 public class FolderCopyRouteBuilder extends EndpointRouteBuilder {
 
 

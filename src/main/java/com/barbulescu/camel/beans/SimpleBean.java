@@ -1,7 +1,7 @@
-package com.barbulescu.camel;
+package com.barbulescu.camel.beans;
 
-import com.barbulescu.camel.model.Type1;
-import com.barbulescu.camel.model.Type2;
+import com.barbulescu.camel.beans.model.Type1;
+import com.barbulescu.camel.beans.model.Type2;
 import org.apache.camel.Body;
 import org.apache.camel.ExchangeProperties;
 import org.apache.camel.Handler;

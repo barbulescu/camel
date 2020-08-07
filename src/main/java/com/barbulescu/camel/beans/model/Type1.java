@@ -1,4 +1,4 @@
-package com.barbulescu.camel.model;
+package com.barbulescu.camel.beans.model;
 
 import lombok.Getter;
 import lombok.Value;
