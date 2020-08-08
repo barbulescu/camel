@@ -1,4 +1,4 @@
-package com.barbulescu.camel;
+package com.barbulescu.camel.folder;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;

@@ -17,6 +17,7 @@
 	<properties>
 		<java.version>14</java.version>
 		<camel.version>3.4.2</camel.version>
+		<activemq.version>5.15.12</activemq.version>
 	</properties>
 
 	<dependencies>
@@ -55,6 +56,16 @@
 			<artifactId>camel-test-spring-junit5</artifactId>
 			<version>${camel.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel.springboot</groupId>
+			<artifactId>camel-activemq-starter</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-client</artifactId>
+			<version>${activemq.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>

@@ -4,7 +4,7 @@
         <useClassPathOnly/>
         <extension name="coverage">
             <pattern>
-                <option name="PATTERN" value="com.barbulescu.camel.*"/>
+                <option name="PATTERN" value="com.barbulescu.camel.folder.*"/>
                 <option name="ENABLED" value="true"/>
             </pattern>
         </extension>
