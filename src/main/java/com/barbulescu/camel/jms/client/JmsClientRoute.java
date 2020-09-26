@@ -15,15 +15,15 @@ public class JmsClientRoute extends EndpointRouteBuilder {
         from(timer("foo").period(5_000))
                 .setBody(constant("Marius"))
                 .setHeader("JMSCorrelationID", UUID::randomUUID)
-                .log("set correlationId: ${header.JMSCorrelationID}")
+//                .log("set correlationId: ${header.JMSCorrelationID}")
                 .to(InOnly, activemq("{{input.queue}}")
                         .timeToLive(1_000));
 
         from(activemq("{{output.queue}}"))
-                .log("received correlationId: ${header.JMSCorrelationID}")
-                .bean(LoggerBean.class)
+//                .log("received correlationId: ${header.JMSCorrelationID}")
+//                .bean(LoggerBean.class)
                 .aggregate(header("JMSCorrelationID"), AggregationStrategies.bean(MyBodyAppender.class))
-                .completionSize(2)
+                .completionPredicate(exchange -> "true".equals(exchange.getProperty("aggregationDone")))
                 .completionTimeout(3_000)
                 .bean(ResponseProcessor.class);
 

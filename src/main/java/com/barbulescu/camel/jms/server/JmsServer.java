@@ -28,13 +28,14 @@ public class JmsServer {
     public void listen(
             String payload,
             @Header(CORRELATION_ID) String correlationId) {
-        System.out.println(payload + " - " + correlationId);
+        System.out.println("IN> " + correlationId + " - " + payload);
 
         sendResponse(correlationId, "<" + correlationId + "> Server says hello ");
         sendResponse(correlationId, payload + "</" + correlationId + ">");
     }
 
     private void sendResponse(String correlationId, String response) {
+        System.out.println("OUT> " + correlationId + " - " + response);
         jmsTemplate.send("jms:responseQueue", session -> {
             TextMessage message = session.createTextMessage(response);
             message.setJMSCorrelationID(correlationId);

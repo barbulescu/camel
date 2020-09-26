@@ -17,6 +17,10 @@ public class MyBodyAppender {
         String aggregate = ofNullable(existing)
                 .map(s -> s + next)
                 .orElse(next);
+
+        if (next.endsWith(">")) {
+            nextProperties.put("aggregationDone", "true");
+        }
         return aggregate;
     }
 }
