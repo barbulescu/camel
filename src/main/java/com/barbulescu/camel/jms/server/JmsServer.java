@@ -8,7 +8,7 @@ import org.springframework.messaging.handler.annotation.Header;
 
 import javax.jms.TextMessage;
 
-import static org.springframework.jms.support.JmsHeaders.*;
+import static org.springframework.jms.support.JmsHeaders.CORRELATION_ID;
 
 @SpringBootApplication
 public class JmsServer {
@@ -29,7 +29,12 @@ public class JmsServer {
             String payload,
             @Header(CORRELATION_ID) String correlationId) {
         System.out.println(payload + " - " + correlationId);
-        String response = "Server says hello " + payload;
+
+        sendResponse(correlationId, "<" + correlationId + "> Server says hello ");
+        sendResponse(correlationId, payload + "</" + correlationId + ">");
+    }
+
+    private void sendResponse(String correlationId, String response) {
         jmsTemplate.send("jms:responseQueue", session -> {
             TextMessage message = session.createTextMessage(response);
             message.setJMSCorrelationID(correlationId);

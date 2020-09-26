@@ -7,12 +7,13 @@ import org.springframework.stereotype.Component;
 @Component
 @Profile("folder")
 public class FolderCopyRouteBuilder extends EndpointRouteBuilder {
-
+    static final String SOURCE = "/tmp/camel_source";
+    static final String TARGET = "/tmp/camel_destination";
 
     @Override
     public void configure() {
-        from(file("/tmp/camel_source").noop(true))
+        from(file(SOURCE))
                 .routeId("folderCopy")
-                .to(file("/tmp/camel_destination"));
+                .to(file(TARGET));
     }
 }

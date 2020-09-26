@@ -10,8 +10,11 @@ public class ProcessorTypesRouteBuilder extends EndpointRouteBuilder {
 
     @Override
     public void configure() {
-        from(direct("processor"))
-                .routeId("processor")
-                .process(new SimpleProcessor());
+        from(direct("processorIn"))
+                .routeId("processorRoute")
+                .process(new SimpleProcessor())
+                .to(direct("processorOut")
+                        .block(false)
+                        .failIfNoConsumers(false));
     }
 }
