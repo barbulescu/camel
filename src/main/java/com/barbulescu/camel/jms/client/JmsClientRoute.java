@@ -7,25 +7,35 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 import static org.apache.camel.ExchangePattern.InOnly;
+import static org.apache.camel.ExchangePattern.InOut;
+import static org.apache.camel.builder.endpoint.dsl.ActiveMQEndpointBuilderFactory.ActiveMQEndpointBuilder;
 
 @Component
 public class JmsClientRoute extends EndpointRouteBuilder {
     @Override
     public void configure() {
-        from(timer("foo").period(5_000))
-                .setBody(constant("Marius"))
+        ActiveMQEndpointBuilder endpointBuilder = activemq("{{input.queue}}");
+        endpointBuilder.replyTo("{{aggregation.queue}}");
+        endpointBuilder.timeToLive(1000);
+
+        from(file("/tmp/input"))
+                .convertBodyTo(String.class)
+                .bean(TrimBean.class)
                 .setHeader("JMSCorrelationID", UUID::randomUUID)
-//                .log("set correlationId: ${header.JMSCorrelationID}")
-                .to(InOnly, activemq("{{input.queue}}")
-                        .timeToLive(1_000));
+                .setProperty("PROPERTY_X1", () -> "P1")
+                .setHeader("HEADER_X1", () -> "H1")
+                .bean(new LoggerBean("client before"))
+                .to(InOut, endpointBuilder)
+                .bean(new LoggerBean("client after"))
+                .bean(ResponseProcessor.class);
 
         from(activemq("{{output.queue}}"))
-//                .log("received correlationId: ${header.JMSCorrelationID}")
-//                .bean(LoggerBean.class)
+                .bean(new LoggerBean("aggregation"))
                 .aggregate(header("JMSCorrelationID"), AggregationStrategies.bean(MyBodyAppender.class))
                 .completionPredicate(exchange -> "true".equals(exchange.getProperty("aggregationDone")))
                 .completionTimeout(3_000)
-                .bean(ResponseProcessor.class);
+                .to(InOnly, activemq("{{aggregation.queue}}"))
+        ;
 
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.messaging.handler.annotation.Header;
 
 import javax.jms.TextMessage;
+import java.util.Random;
 
 import static org.springframework.jms.support.JmsHeaders.CORRELATION_ID;
 
@@ -14,6 +15,7 @@ import static org.springframework.jms.support.JmsHeaders.CORRELATION_ID;
 public class JmsServer {
 
     private final JmsTemplate jmsTemplate;
+    private final Random random = new Random(System.currentTimeMillis());
 
     public JmsServer(JmsTemplate jmsTemplate) {
         this.jmsTemplate = jmsTemplate;
@@ -30,8 +32,13 @@ public class JmsServer {
             @Header(CORRELATION_ID) String correlationId) {
         System.out.println("IN> " + correlationId + " - " + payload);
 
-        sendResponse(correlationId, "<" + correlationId + "> Server says hello ");
-        sendResponse(correlationId, payload + "</" + correlationId + ">");
+        if (random.nextBoolean()) {
+            sendResponse(correlationId, "Server says hello");
+            sendResponse(correlationId, payload);
+        } else {
+            sendResponse(correlationId, "Server says hello " + payload);
+        }
+        sendResponse(correlationId, "END");
     }
 
     private void sendResponse(String correlationId, String response) {

@@ -11,13 +11,27 @@ import static java.util.stream.Collectors.joining;
 
 public class LoggerBean {
 
+    private final String context;
+
+    public LoggerBean(String context) {
+        this.context = context;
+    }
+
     @Handler
-    void log(@Body String body, @Headers Map<String, Object> headers, @ExchangeProperties Map<String, Object> properties) {
-        System.out.println("headers: \n" + headers.entrySet().stream()
+    void log(@Body Object body, @Headers Map<String, Object> headers, @ExchangeProperties Map<String, Object> properties) {
+        String headerLine = headers.entrySet().stream()
                 .map(entry -> entry.getKey() + "=" + entry.getValue())
-                .collect(joining("\n")));
-        System.out.println("properties: \n" + properties.entrySet().stream()
+                .map(it -> "\n\t" + it)
+                .collect(joining(""));
+        String propertiesLine = properties.entrySet().stream()
                 .map(entry -> entry.getKey() + "=" + entry.getValue())
-                .collect(joining("\n")));
+                .map(it -> "\n\t" + it)
+                .collect(joining(""));
+
+        System.out.println(">>>--------------- " + context + " ------------------------");
+        System.out.println("headers: " + headerLine);
+        System.out.println("properties: " + propertiesLine);
+        System.out.println("body: >" + body + "< of type " + body.getClass().getSimpleName());
+        System.out.println("<<<---------------------------------------");
     }
 }
