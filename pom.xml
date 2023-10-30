@@ -17,7 +17,7 @@
     <properties>
         <java.version>14</java.version>
         <camel.version>3.5.0</camel.version>
-        <activemq.version>5.16.0</activemq.version>
+        <activemq.version>5.16.7</activemq.version>
     </properties>
 
     <dependencyManagement>
